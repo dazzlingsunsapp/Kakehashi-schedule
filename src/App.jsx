@@ -63,46 +63,51 @@ function StatusBadge({ status }) {
 function MatchRow({ match, teams, onSave, onDelete }) {
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState(match);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
-
   const save = () => { onSave(form); setEditing(false); };
 
   if (editing) {
     return (
-      <tr style={{ background: "#fffdf9", borderBottom: `1px solid ${LIGHT}` }}>
-        <td style={td}><input style={input} type="date" value={form.date} onChange={e => set("date", e.target.value)}/></td>
-        <td style={td}><input style={{...input, width: 70}} type="time" value={form.time} onChange={e => set("time", e.target.value)}/></td>
-        <td style={td}><input style={{...input, width: 90}} value={form.court} onChange={e => set("court", e.target.value)}/></td>
-        <td style={{...td, textAlign:"right"}}>
-          <select style={sel} value={form.home} onChange={e => set("home", e.target.value)}>
-            {teams.map(t => <option key={t}>{t}</option>)}
-          </select>
-        </td>
-        <td style={{...td, textAlign:"center"}}>
-          <span style={{ display:"flex", alignItems:"center", gap:4, justifyContent:"center" }}>
-            <input style={{...input, width:40, textAlign:"center"}} value={form.homeScore} onChange={e => set("homeScore", e.target.value)} placeholder="—"/>
-            <span style={{ color: MUTED, fontWeight:700 }}>:</span>
-            <input style={{...input, width:40, textAlign:"center"}} value={form.awayScore} onChange={e => set("awayScore", e.target.value)} placeholder="—"/>
-          </span>
-        </td>
-        <td style={td}>
-          <select style={sel} value={form.away} onChange={e => set("away", e.target.value)}>
-            {teams.map(t => <option key={t}>{t}</option>)}
-          </select>
-        </td>
-        <td style={td}>
-          <select style={sel} value={form.status} onChange={e => set("status", e.target.value)}>
-            <option value="scheduled">予定</option>
-            <option value="live">試合中</option>
-            <option value="done">終了</option>
-          </select>
-        </td>
-        <td style={td}>
-          <button style={btn(ORANGE)} onClick={save}>保存</button>
-          <button style={{...btn(LIGHT), color:MUTED, marginLeft:4}} onClick={() => setEditing(false)}>取消</button>
-        </td>
-      </tr>
+      <>
+        <tr style={{ background: "#fffdf9", borderBottom: `1px solid ${LIGHT}` }}>
+          <td colSpan={8} style={{ padding:"12px 16px" }}>
+            <div style={{ display:"flex", flexWrap:"wrap", gap:8, alignItems:"center" }}>
+              <input style={{...input, width:130}} type="date" value={form.date} onChange={e => set("date", e.target.value)}/>
+              <input style={{...input, width:80}} type="time" value={form.time} onChange={e => set("time", e.target.value)}/>
+              <input style={{...input, width:90}} placeholder="コート" value={form.court} onChange={e => set("court", e.target.value)}/>
+              <select style={sel} value={form.home} onChange={e => set("home", e.target.value)}>
+                {teams.map(t => <option key={t}>{t}</option>)}
+              </select>
+              <span style={{ display:"flex", alignItems:"center", gap:4 }}>
+                <input style={{...input, width:44, textAlign:"center"}} value={form.homeScore} onChange={e => set("homeScore", e.target.value)} placeholder="—"/>
+                <span style={{ color:MUTED, fontWeight:700 }}>:</span>
+                <input style={{...input, width:44, textAlign:"center"}} value={form.awayScore} onChange={e => set("awayScore", e.target.value)} placeholder="—"/>
+              </span>
+              <select style={sel} value={form.away} onChange={e => set("away", e.target.value)}>
+                {teams.map(t => <option key={t}>{t}</option>)}
+              </select>
+              <select style={sel} value={form.status} onChange={e => set("status", e.target.value)}>
+                <option value="scheduled">予定</option>
+                <option value="live">試合中</option>
+                <option value="done">終了</option>
+              </select>
+              <button style={btn(ORANGE)} onClick={save}><span style={{color:WHITE}}>保存</span></button>
+              <button style={{...btn(LIGHT), color:MUTED}} onClick={() => setEditing(false)}>取消</button>
+              {confirmDelete ? (
+                <>
+                  <span style={{fontSize:12, color:"#e53935", fontWeight:700}}>本当に削除？</span>
+                  <button style={{...btn("#fdecea"), color:"#e53935"}} onClick={() => onDelete(match.id)}>削除する</button>
+                  <button style={{...btn(LIGHT), color:MUTED}} onClick={() => setConfirmDelete(false)}>戻る</button>
+                </>
+              ) : (
+                <button style={{...btn(LIGHT), color:"#e53935"}} onClick={() => setConfirmDelete(true)}>削除</button>
+              )}
+            </div>
+          </td>
+        </tr>
+      </>
     );
   }
 
@@ -147,10 +152,6 @@ function MatchRow({ match, teams, onSave, onDelete }) {
       <td style={{...td, whiteSpace:"nowrap"}}>
         <button style={btn(LIGHT)} onClick={() => setEditing(true)}>
           <span style={{ color: NAVY, fontSize:12, fontWeight:600 }}>編集</span>
-        </button>
-        <button style={{...btn("transparent"), color:"#e53935", marginLeft:4, fontSize:16, padding:"4px 6px"}}
-          onClick={() => { if(window.confirm("この試合を削除しますか？")) onDelete(match.id); }}>
-          ✕
         </button>
       </td>
     </tr>
