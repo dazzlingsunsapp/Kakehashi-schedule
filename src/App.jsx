@@ -339,3 +339,4 @@ onKeyDown={e => e.key==="Enter" && addTeam()}/>
 </div>
 </div>
 );
+}
