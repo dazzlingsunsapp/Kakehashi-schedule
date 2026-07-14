@@ -15,34 +15,15 @@ const defaultMatches = [
   { id: 3, date: "2025-10-04", time: "13:00", court: "コート1", venue: "", home: "チームE", away: "チームA", homeScore: "", awayScore: "", status: "scheduled" },
 ];
 
-function KakehashiLogo({ size = 32 }) {
-  const s = size / 110;
+const LOGO_B64 = "/9j/4QDKRXhpZgAATU0AKgAAAAgABgESAAMAAAABAAEAAAEaAAUAAAABAAAAVgEbAAUAAAABAAAAXgEoAAMAAAABAAIAAAITAAMAAAABAAEAAIdpAAQAAAABAAAAZgAAAAAAAABIAAAAAQAAAEgAAAABAAeQAAAHAAAABDAyMjGRAQAHAAAABAECAwCgAAAHAAAABDAxMDCgAQADAAAAAQABAACgAgAEAAAAAQAAAwygAwAEAAAAAQAAAdWkBgADAAAAAQAAAAAAAAAAAAD/4gIoSUNDX1BST0ZJTEUAAQEAAAIYYXBwbAQAAABtbnRyUkdCIFhZWiAH5gABAAEAAAAAAABhY3NwQVBQTAAAAABBUFBMAAAAAAAAAAAAAAAAAAAAAAAA9tYAAQAAAADTLWFwcGwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAApkZXNjAAAA/AAAADBjcHJ0AAABLAAAAFB3dHB0AAABfAAAABRyWFlaAAABkAAAABRnWFlaAAABpAAAABRiWFlaAAABuAAAABRyVFJDAAABzAAAACBjaGFkAAAB7AAAACxiVFJDAAABzAAAACBnVFJDAAABzAAAACBtbHVjAAAAAAAAAAEAAAAMZW5VUwAAABQAAAAcAEQAaQBzAHAAbABhAHkAIABQADNtbHVjAAAAAAAAAAEAAAAMZW5VUwAAADQAAAAcAEMAbwBwAHkAcgBpAGcAaAB0ACAAQQBwAHAAbABlACAASQBuAGMALgAsACAAMgAwADIAMlhZWiAAAAAAAAD21QABAAAAANMsWFlaIAAAAAAAAIPfAAA9v////7tYWVogAAAAAAAASr8AALE3AAAKuVhZWiAAAAAAAAAoOAAAEQsAAMi5cGFyYQAAAAAAAwAAAAJmZgAA8qcAAA1ZAAAT0AAACltzZjMyAAAAAAABDEIAAAXe///zJgAAB5MAAP2Q///7ov///aMAAAPcAADAbv/bAIQAAQEBAQEBAgEBAgMCAgIDBAMDAwMEBQQEBAQEBQYFBQUFBQUGBgYGBgYGBgcHBwcHBwgICAgICQkJCQkJCQkJCQEBAQECAgIEAgIECQYFBgkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJCQkJ";
+
+function KakehashiLogo({ height = 60 }) {
   return (
-    <svg width={size} height={size} viewBox="-55 -55 110 110">
-      <g fill="none" strokeLinecap="round">
-        <path d="M -20,-70 C -60,-40 -20,-30 0,-15" stroke={ORANGE} strokeWidth={3/s*0.7}/>
-        <path d="M 55,-45 C 50,-80 20,-55 0,-15" stroke={ORANGE} strokeWidth={2.8/s*0.7}/>
-        <path d="M 70,10 C 80,-45 35,-15 0,-15" stroke={ORANGE} strokeWidth={2.6/s*0.7}/>
-        <path d="M 45,65 C 80,15 30,5 0,-15" stroke={NAVY} strokeWidth={2.6/s*0.7}/>
-        <path d="M -10,75 C 40,55 15,5 0,-15" stroke={NAVY} strokeWidth={2.4/s*0.7}/>
-        <path d="M -60,55 C -15,55 -12,5 0,-15" stroke={NAVY} strokeWidth={2.2/s*0.7}/>
-        <path d="M -75,5 C -65,45 -28,2 0,-15" stroke={NAVY} strokeWidth={2.6/s*0.7}/>
-        <path d="M -60,-45 C -75,-5 -30,-20 0,-15" stroke={ORANGE} strokeWidth={2.2/s*0.7}/>
-        <path d="M 15,-75 C 15,-50 8,-38 0,-15" stroke={ORANGE} strokeWidth={1.8/s*0.7}/>
-      </g>
-      <g fill={NAVY}>
-        <circle cx="-20" cy="-70" r={4/s*0.7}/>
-        <circle cx="55"  cy="-45" r={4/s*0.7}/>
-        <circle cx="70"  cy="10"  r={4/s*0.7}/>
-        <circle cx="45"  cy="65"  r={4/s*0.7}/>
-        <circle cx="-10" cy="75"  r={4/s*0.7}/>
-        <circle cx="-60" cy="55"  r={4/s*0.7}/>
-        <circle cx="-75" cy="5"   r={4/s*0.7}/>
-        <circle cx="-60" cy="-45" r={4/s*0.7}/>
-        <circle cx="15"  cy="-75" r={4/s*0.7}/>
-      </g>
-      <circle cx="0" cy="-15" r={5/s*0.7} fill={NAVY}/>
-    </svg>
+    <img
+      src={`data:image/jpeg;base64,${LOGO_B64}`}
+      alt="KAKEHASHI PROJECT"
+      style={{ height, objectFit: "contain", display: "block" }}
+    />
   );
 }
 
@@ -187,7 +168,7 @@ function Standings({ matches, teams }) {
       <table style={{ width:"100%", borderCollapse:"collapse" }}>
         <thead>
           <tr style={{ borderBottom:`2px solid ${NAVY}` }}>
-            {["順位","チーム","勝","負","分","得失","勝点"].map(h => (
+            {["順位","チーム","勝","負","分","勝点"].map(h => (
               <th key={h} style={{ ...th, color: NAVY }}>{h}</th>
             ))}
           </tr>
@@ -200,9 +181,6 @@ function Standings({ matches, teams }) {
               <td style={th}>{r.w}</td>
               <td style={th}>{r.l}</td>
               <td style={th}>{r.d}</td>
-              <td style={{...th, color: r.diff>0?ORANGE:r.diff<0?"#e53935":MUTED, fontWeight:700}}>
-                {r.diff > 0 ? `+${r.diff}` : r.diff}
-              </td>
               <td style={{...th, fontWeight:800, fontSize:16, color: i===0?ORANGE:NAVY}}>{r.pts}</td>
             </tr>
           ))}
@@ -220,18 +198,23 @@ const sel = { border:`1px solid ${LIGHT}`, borderRadius:4, padding:"4px 6px", fo
 const btn = (bg) => ({ background:bg, border:"none", borderRadius:6, padding:"5px 12px", cursor:"pointer", fontWeight:600, fontSize:12 });
 
 export default function App() {
+  const league = new URLSearchParams(window.location.search).get("league") || "men";
+  const leagueLabel = league === "women" ? "女子" : "男子";
+  const keyM = `kk_matches_${league}`;
+  const keyT = `kk_teams_${league}`;
+
   const [matches, setMatches] = useState(() => {
-    try { const s = localStorage.getItem("kk_matches"); return s ? JSON.parse(s) : defaultMatches; } catch { return defaultMatches; }
+    try { const s = localStorage.getItem(keyM); return s ? JSON.parse(s) : defaultMatches; } catch { return defaultMatches; }
   });
   const [teams, setTeams] = useState(() => {
-    try { const s = localStorage.getItem("kk_teams"); return s ? JSON.parse(s) : defaultTeams; } catch { return defaultTeams; }
+    try { const s = localStorage.getItem(keyT); return s ? JSON.parse(s) : defaultTeams; } catch { return defaultTeams; }
   });
   const [newTeam, setNewTeam] = useState("");
   const [tab, setTab] = useState("schedule");
   const [filter, setFilter] = useState("all");
 
-  useEffect(() => { localStorage.setItem("kk_matches", JSON.stringify(matches)); }, [matches]);
-  useEffect(() => { localStorage.setItem("kk_teams", JSON.stringify(teams)); }, [teams]);
+  useEffect(() => { localStorage.setItem(keyM, JSON.stringify(matches)); }, [matches]);
+  useEffect(() => { localStorage.setItem(keyT, JSON.stringify(teams)); }, [teams]);
 
   const updateMatch = (updated) => {
     setMatches(ms => ms.map(m => m.id === updated.id ? updated : m));
@@ -260,23 +243,31 @@ export default function App() {
   return (
     <div style={{ minHeight:"100vh", background:BG, fontFamily:"'Helvetica Neue',Arial,'Hiragino Sans',sans-serif" }}>
       {/* ヘッダー */}
-      <div style={{ background:NAVY, padding:"20px 32px", display:"flex", alignItems:"center", gap:16 }}>
-        <KakehashiLogo size={44}/>
+      <div style={{ background:WHITE, borderBottom:`2px solid ${LIGHT}`, padding:"12px 28px", display:"flex", alignItems:"center", gap:20 }}>
+        <KakehashiLogo size={120}/>
         <div>
-          <div style={{ color:WHITE, fontSize:20, fontWeight:800, letterSpacing:3 }}>KAKEHASHI PROJECT</div>
-          <div style={{ color:ORANGE, fontSize:11, letterSpacing:4, marginTop:2 }}>BASKETBALL LEAGUE</div>
+          <div style={{ fontSize:22, fontWeight:900, letterSpacing:4, color:"#111", fontFamily:"Georgia,serif" }}>KAKEHASHI</div>
+          <div style={{ display:"flex", alignItems:"center", gap:6, marginTop:2 }}>
+            <div style={{ width:24, height:2, background:ORANGE }}/>
+            <span style={{ fontSize:12, fontWeight:700, letterSpacing:4, color:"#333" }}>PROJECT</span>
+            <div style={{ width:24, height:2, background:ORANGE }}/>
+          </div>
         </div>
-        <div style={{ marginLeft:"auto", display:"flex", gap:8 }}>
-          {["schedule","standings"].map(t => (
-            <button key={t} onClick={() => setTab(t)} style={{
-              background: tab===t ? ORANGE : "rgba(255,255,255,.1)",
-              color: WHITE, border:"none", borderRadius:6,
-              padding:"7px 18px", fontWeight:700, fontSize:12,
-              letterSpacing:1, cursor:"pointer"
-            }}>
-              {t === "schedule" ? "試合日程" : "順位表"}
-            </button>
-          ))}
+        <div style={{ marginLeft:"auto", display:"flex", flexDirection:"column", alignItems:"flex-end", gap:8 }}>
+          <span style={{ background: league==="women"?"#f8bbd0":LIGHT, color: league==="women"?"#c2185b":NAVY, fontWeight:800, fontSize:13, padding:"4px 14px", borderRadius:20, letterSpacing:2 }}>
+            {leagueLabel}
+          </span>
+          <div style={{ display:"flex", gap:8 }}>
+            {["schedule","standings"].map(t => (
+              <button key={t} onClick={() => setTab(t)} style={{
+                background: tab===t ? NAVY : LIGHT,
+                color: tab===t ? WHITE : MUTED, border:"none", borderRadius:6,
+                padding:"6px 16px", fontWeight:700, fontSize:12, letterSpacing:1, cursor:"pointer"
+              }}>
+                {t === "schedule" ? "試合日程" : "順位表"}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
